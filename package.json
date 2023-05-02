@@ -1,32 +1,37 @@
 {
-  "name": "etl",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "lint:fix": "eslint --fix .",
-    "lint": "eslint ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Anonimatrix/etl.git"
-  },
-  "keywords": [],
-  "author": "Ezequiel Imaz <tavelliezequiel@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Anonimatrix/etl/issues"
-  },
-  "homepage": "https://github.com/Anonimatrix/etl#readme",
-  "devDependencies": {
-    "@jest/globals": "^29.5.0",
-    "@types/jest": "^29.5.1",
-    "@types/pg": "^8.6.6"
-  },
-  "dependencies": {
-    "eslint": "^8.39.0",
-    "pg": "^8.10.0",
-    "typescript": "^5.0.4"
-  }
+    "name": "@xkairo/etl",
+    "version": "1.0.5",
+    "description": "",
+    "main": "dist/main.js",
+    "typings": "dist/main.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "test": "jest",
+        "lint:fix": "eslint --fix .",
+        "lint": "eslint .",
+        "build": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Anonimatrix/etl.git"
+    },
+    "keywords": [],
+    "author": "Ezequiel Imaz <tavelliezequiel@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Anonimatrix/etl/issues"
+    },
+    "homepage": "https://github.com/Anonimatrix/etl#readme",
+    "devDependencies": {
+        "@jest/globals": "^29.5.0",
+        "@types/jest": "^29.5.1",
+        "@types/pg": "^8.6.6"
+    },
+    "dependencies": {
+        "eslint": "^8.39.0",
+        "pg": "^8.10.0",
+        "typescript": "^5.0.4"
+    }
 }

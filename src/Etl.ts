@@ -28,6 +28,9 @@ export class Etl<T extends object> {
 
     private async format(obj: T): Promise<T> {
         const { formatters } = this.options;
+
+        if (!formatters) return obj;
+
         const newObj: T = { ...obj };
 
         formatters.forEach((format) => {
@@ -41,12 +44,17 @@ export class Etl<T extends object> {
 
     private async transform(obj: T): Promise<T> {
         const { transform } = this.options;
+
+        if (!transform) return obj;
+
         const newObj: T = { ...obj };
 
         Object.entries(newObj).forEach(([key, value]) => {
             if (transform.hasOwnProperty(key)) {
                 newObj[key as keyof T] = transform[key as KeyOf<T>](
-                    value
+                    obj,
+                    value,
+                    this.options.client
                 ) as any;
             } else {
                 newObj[key as keyof T] = value;
