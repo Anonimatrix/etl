@@ -51,7 +51,7 @@ export class Etl<T extends object> {
 
         Object.entries(newObj).forEach(([key, value]) => {
             if (transform.hasOwnProperty(key)) {
-                newObj[key as keyof T] = transform[key as KeyOf<T>](
+                newObj[key as keyof T] = transform[key as KeyOf<T>]?.(
                     obj,
                     value,
                     this.options.client
