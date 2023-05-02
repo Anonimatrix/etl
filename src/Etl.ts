@@ -11,12 +11,19 @@ export class Etl<T extends object> {
         obj = await this.format(obj);
         obj = await this.transform(obj);
         await this.insert(obj);
+        await this.close();
     }
 
     private async connect() {
         const { client } = this.options;
 
         await client.connect(this.options.connection);
+    }
+
+    private async close() {
+        const { client } = this.options;
+
+        await client.close();
     }
 
     private async format(obj: T): Promise<T> {
@@ -54,6 +61,6 @@ export class Etl<T extends object> {
 
         const query = await Query.fromObject(obj, table);
 
-        await client.query(table, query);
+        await client.query(query);
     }
 }

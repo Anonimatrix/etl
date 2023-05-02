@@ -6,8 +6,9 @@ export interface ConnectionOptions {
 }
 
 export interface ClientAdapter {
-    connect(options: ConnectionOptions): Promise<void>;
-    query(table: string, query: string): Promise<void>;
+    connect(options: ConnectionOptions): Promise<void> | void;
+    query(query: string): Promise<void> | void;
+    close(): Promise<void> | void;
 }
 
 export interface EtlOptions<T extends object> {
@@ -24,4 +25,4 @@ export type Transform<T extends object> = {
     [key in KeyOf<T>]: (value: string) => string;
 };
 
-type Formater = (object: any, key: string, value: any) => void;
+export type Formater = (object: any, key: string, value: any) => void;
