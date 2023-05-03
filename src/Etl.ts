@@ -72,7 +72,7 @@ export class Etl<T extends object> {
             }
         });
 
-        return obj;
+        return newObj;
     }
 
     private async insert(query: string): Promise<void> {
