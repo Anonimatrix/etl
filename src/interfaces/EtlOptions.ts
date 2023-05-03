@@ -27,7 +27,7 @@ export interface EtlOptions<T extends object> {
 export type KeyOf<T extends object> = Extract<keyof T, string>;
 
 export type Transform<T extends object> = {
-    [key in KeyOf<T>]?: (object: any, value: string, client: ClientAdapter) => string | number;
+    [key in KeyOf<T>]?: (object: any, value: string, client: ClientAdapter) => string | number | Promise<string | number>;
 };
 
 export type Formater = (object: any, key: string, value: any) => void;

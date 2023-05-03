@@ -60,9 +60,9 @@ export class Etl<T extends object> {
 
         const newObj: T = { ...obj };
 
-        Object.entries(newObj).forEach(([key, value]) => {
+        Object.entries(newObj).forEach(async ([key, value]) => {
             if (transform.hasOwnProperty(key)) {
-                newObj[key as keyof T] = transform[key as KeyOf<T>]?.(
+                newObj[key as keyof T] = await transform[key as KeyOf<T>]?.(
                     obj,
                     value,
                     this.options.client
