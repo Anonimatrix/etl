@@ -1,3 +1,4 @@
+import { ExcelAdapter } from "./Adapters/ExcelAdapter";
 import { PostgresAdapter } from "./Adapters/PostgresAdapter";
 import { Etl } from "./Etl";
 import { clear, collision } from "./Formaters/formaters";
@@ -13,6 +14,7 @@ export default Etl;
 
 const Adapters = {
     PostgresAdapter,
+    ExcelAdapter
 }
 
 const Formaters = {

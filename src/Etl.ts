@@ -6,11 +6,22 @@ export class Etl<T extends object> {
         this.options = options;
     }
 
-    public async run(obj: T): Promise<void> {
+    public async run(data: T[]): Promise<void> {
         this.connect();
-        obj = await this.format(obj);
-        obj = await this.transform(obj);
-        await this.insert(obj);
+
+        let query: string = "";
+        let index = 0;
+
+        for (let item of data) {
+            item = await this.format(item);
+            item = await this.transform(item);
+
+            query += await Query.fromObject(item, this.options.table, index);
+            index++;
+        }
+
+        await this.insert(query);
+
         await this.close();
     }
 
@@ -64,10 +75,8 @@ export class Etl<T extends object> {
         return obj;
     }
 
-    private async insert(obj: T): Promise<void> {
-        const { client, table } = this.options;
-
-        const query = await Query.fromObject(obj, table);
+    private async insert(query: string): Promise<void> {
+        const { client } = this.options;
 
         await client.query(query);
     }
