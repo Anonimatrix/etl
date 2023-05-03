@@ -8,6 +8,10 @@ export class ExcelAdapter<T extends object> implements FileAdapter<T> {
         this.filepath = filepath;
     }
 
+    /**
+     *  Convert the excel file to an array of objects
+     * @returns Array of objects from the excel file
+     */
     toArrayOfObject(): T[]{
         const data: T[] = [];
         const file = reader.readFile(this.filepath)

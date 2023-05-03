@@ -6,6 +6,10 @@ export class Etl<T extends object> {
         this.options = options;
     }
 
+    /**
+     *  Insert data into the database using the options provided
+     * @param data Array of objects to be inserted into the database
+     */
     public async run(data: T[]): Promise<void> {
         this.connect();
 
