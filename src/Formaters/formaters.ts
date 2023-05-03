@@ -1,5 +1,16 @@
 import { Formater } from "../interfaces/EtlOptions";
 
+export const changeNames: <T extends object>(name: { [key: string]: keyof T }) => Formater = (names) => (obj, key, value) => {
+    if (names[key]) {
+        delete obj[key];
+        obj[names[key]] = value;
+    } else {
+        obj[key] = value;
+    }
+
+    return obj;
+};
+
 export const clear: Formater = (obj, key, value) => {
     delete obj[key];
     obj[key.trim()] = value.trim();

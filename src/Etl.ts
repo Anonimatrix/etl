@@ -15,6 +15,7 @@ export class Etl<T extends object> {
         for (let item of data) {
             item = await this.format(item);
             item = await this.transform(item);
+            item = await this.remove(item);
 
             query += await Query.fromObject(item, this.options.table, index);
             index++;
@@ -51,6 +52,20 @@ export class Etl<T extends object> {
         });
 
         return obj;
+    }
+
+    private async remove(obj: T): Promise<T> {
+        const { remove } = this.options;
+
+        if (!remove) return obj;
+
+        const newObj: T = { ...obj };
+
+        remove.forEach((key) => {
+            delete newObj[key as keyof T];
+        });
+
+        return newObj;
     }
 
     private async transform(obj: T): Promise<T> {

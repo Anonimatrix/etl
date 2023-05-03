@@ -22,6 +22,7 @@ export interface EtlOptions<T extends object> {
     formatters?: Formater[];
     transform?: Partial<Transform<T>>;
     client: ClientAdapter;
+    remove: string[];
 }
 
 export type KeyOf<T extends object> = Extract<keyof T, string>;
