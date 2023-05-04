@@ -23,12 +23,13 @@ export interface EtlOptions<T extends object> {
     transform?: Partial<Transform<T>>;
     client: ClientAdapter;
     remove?: string[];
+    chunkItems?: number;
 }
 
 export type KeyOf<T extends object> = Extract<keyof T, string>;
 
 export type Transform<T extends object> = {
-    [key in KeyOf<T>]?: (object: any, value: string, client: ClientAdapter) => string | number | Promise<string | number>;
+    [key in KeyOf<T>]?: (object: any, value: string, client: ClientAdapter) => string | number | null | Promise<string | number | null>;
 };
 
 export type Formater = (object: any, key: string, value: any) => void;

@@ -23,13 +23,20 @@ export class Etl<T extends object> {
 
             //Add the query to the string and add a comma
             query += await Query.fromObject(item, this.options.table, index) + ',';
+            
+            if(this.options.chunkItems && index % this.options.chunkItems === 0) {
+                await this.insert(query.slice(0, -1));
+                query = "";
+            }
             index++;
         }
 
-        //Remove the last comma
-        query = query.slice(0, -1);
+        if(query.length > 0) {
+            //Remove the last comma
+            query = query.slice(0, -1);
 
-        await this.insert(query);
+            await this.insert(query);
+        }
 
         await this.close();
     }
@@ -88,10 +95,10 @@ export class Etl<T extends object> {
 
             if (value == null) delete newObj[key as keyof T];
 
-            let newValue: string | number = "NULL";
+            let newValue: string | number | null = null;
 
             try {
-                newValue = await transform[key as KeyOf<T>]?.(obj, value, this.options.client) || "NULL";
+                newValue = await transform[key as KeyOf<T>]?.(obj, value, this.options.client) || null;
             } catch (e) {
                 const msgError = e instanceof Error ? e.message : e;
                 console.error(`Error transforming ${key}: ${msgError}`);

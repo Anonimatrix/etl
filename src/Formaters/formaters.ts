@@ -59,13 +59,16 @@ const isColCollision = (col: string, otherCol: string, accuracy: number) => {
  *  Check if the key is a collision of the columns. Only conserves the columns with collision
  * @param cols  The columns to be checked
  * @param accuracy  The accuracy of the check
+ * @param minLength  The minimum length of the key to be checked with accuracy. If the key is less than minLength, the key should be equal to the column
  * @returns  A function that checks if the key is a collision of the columns
  */
-export const collision: (cols: string[], accuracy: number) => Formater = (cols: string[], accuracy = 0.1) => (obj, key, value) => {
+export const collision: (cols: string[], accuracy?: number, minLength?: number) => Formater = (cols: string[], accuracy = 0.1, minLength = 3) => (obj, key, value) => {
     let collision = false;
     for(const col of cols) {
-        if(isColCollision(key, col, accuracy) || isColCollision(col, key, accuracy)) {
-            delete obj[key]
+        const minLengthCompare = minLength < key.length || col === key;
+
+        if(minLengthCompare && (isColCollision(key, col, accuracy) || isColCollision(col, key, accuracy))) {
+            delete obj[key];
             obj[col] = value;
             collision = true; 
             break; 
