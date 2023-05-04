@@ -79,22 +79,20 @@ export class Etl<T extends object> {
 
         const newObj: T = { ...obj };
 
-        Object.entries(newObj).forEach(async ([key, value]) => {
-            if (transform.hasOwnProperty(key)) {
-                let newValue: string | number = "NULL";
+        for(let key in transform) {
+            const value: any = obj[key as keyof T];
 
-                try {
-                    newValue = await transform[key as KeyOf<T>]?.(obj, value, this.options.client) || "NULL";
-                } catch (e) {
-                    const msgError = e instanceof Error ? e.message : e;
-                    console.error(`Error transforming ${key}: ${msgError}`);
-                }
-                
-                newObj[key as keyof T] = newValue as any;
-            } else {
-                newObj[key as keyof T] = value;
+            if (value == null) delete newObj[key as keyof T];
+
+            let newValue: string | number = "NULL";
+
+            try {
+                newValue = await transform[key as KeyOf<T>]?.(obj, value, this.options.client) || "NULL";
+            } catch (e) {
+                const msgError = e instanceof Error ? e.message : e;
+                console.error(`Error transforming ${key}: ${msgError}`);
             }
-        });
+        }
 
         return newObj;
     }
