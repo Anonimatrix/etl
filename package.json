@@ -27,7 +27,8 @@
     "devDependencies": {
         "@jest/globals": "^29.5.0",
         "@types/jest": "^29.5.1",
-        "@types/pg": "^8.6.6"
+        "@types/pg": "^8.6.6",
+        "ts-jest": "^29.1.0"
     },
     "dependencies": {
         "eslint": "^8.39.0",

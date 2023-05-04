@@ -55,7 +55,7 @@ export class Etl<T extends object> {
             });
         });
 
-        return obj;
+        return newObj;
     }
 
     private async remove(obj: T): Promise<T> {
@@ -81,11 +81,16 @@ export class Etl<T extends object> {
 
         Object.entries(newObj).forEach(async ([key, value]) => {
             if (transform.hasOwnProperty(key)) {
-                newObj[key as keyof T] = await transform[key as KeyOf<T>]?.(
-                    obj,
-                    value,
-                    this.options.client
-                ) as any;
+                let newValue: string | number = "NULL";
+
+                try {
+                    newValue = await transform[key as KeyOf<T>]?.(obj, value, this.options.client) || "NULL";
+                } catch (e) {
+                    const msgError = e instanceof Error ? e.message : e;
+                    console.error(`Error transforming ${key}: ${msgError}`);
+                }
+                
+                newObj[key as keyof T] = newValue as any;
             } else {
                 newObj[key as keyof T] = value;
             }
