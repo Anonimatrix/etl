@@ -1,4 +1,5 @@
 import { Formater } from "../interfaces/EtlOptions";
+import {Diff} from "diff";
 
 /**
  *  Change the names of the keys of the object
@@ -27,6 +28,16 @@ export const clear: Formater = (obj, key, value) => {
     obj[key.trim()] = typeof value == "string" ? value.trim() : value;
 };
 
+const countCharsDiff = (col: string, otherCol: string) => {
+    const diff = new Diff().diff(col, otherCol);
+    let count = 0;
+    for(const part of diff) {
+        if(part.added || part.removed) count += part.value.length;
+    }
+    return count;
+}
+
+
 const isColCollision = (col: string, otherCol: string, accuracy: number) => {
     // Get the max length of the two strings and multiply by the accuracy
     const maxLen = Math.max(col.length, otherCol.length);
@@ -34,8 +45,10 @@ const isColCollision = (col: string, otherCol: string, accuracy: number) => {
 
     // Get the difference between the two strings
     const colDifference = col.toLowerCase().replace(otherCol.toLowerCase(), '');
+    const countDifference = countCharsDiff(col, otherCol);
+
     // Check if the difference is not too big
-    const differenceNotHasManyChars = colDifference.length < maxChars;
+    const differenceNotHasManyChars = countDifference <= maxChars;
     // Check if the difference is not a word
     const differenceNotHasOtherWord = !colDifference.includes('_');
 
@@ -58,6 +71,6 @@ export const collision: (cols: string[], accuracy: number) => Formater = (cols: 
             break; 
         }
     }
-        
+
     if(!collision) delete obj[key];
 }

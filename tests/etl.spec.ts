@@ -58,7 +58,7 @@ describe('Etl main', () => {
             formatters
         }).run(data);
 
-        expect(query).toBe("JOHN20JANE30");
+        expect(query).toBe("JOHN20,JANE30");
     });
 
     it('Should excecute the etl process with transform', async () => {
@@ -86,6 +86,6 @@ describe('Etl main', () => {
             }
         }).run(data);
 
-        expect(query).toBe("JOHN20JANE30");
+        expect(query).toBe("JOHN20,JANE30");
     });
 })
