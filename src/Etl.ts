@@ -96,6 +96,8 @@ export class Etl<T extends object> {
                 const msgError = e instanceof Error ? e.message : e;
                 console.error(`Error transforming ${key}: ${msgError}`);
             }
+
+            newObj[key as keyof T] = newValue as any;
         }
 
         return newObj;
