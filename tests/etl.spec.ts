@@ -42,7 +42,7 @@ describe('Etl main', () => {
         Query.fromObject = jest.fn((object) => Object.values(object).reduce((prev, curr) => prev + curr, ''));
         client.connect = jest.fn();
         client.close = jest.fn();
-        client.query = jest.fn((q) => {
+        client.query = jest.fn(async (q) => {
             query = q;
         });
 
@@ -68,7 +68,7 @@ describe('Etl main', () => {
         Query.fromObject = jest.fn((object) => Object.values(object).reduce((prev, curr) => prev + curr, ''));
         client.connect = jest.fn();
         client.close = jest.fn();
-        client.query = jest.fn((q) => {
+        client.query = jest.fn(async (q) => {
             query = q;
         });
 

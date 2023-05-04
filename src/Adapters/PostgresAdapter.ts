@@ -8,14 +8,12 @@ export class PostgresAdapter implements ClientAdapter {
         this.client = new Pool(options);
     }
 
-    query(query: string): Promise<void> | void {
+    async query(query: string): Promise<void> {
         if (!this.client) {
             throw new Error("Client not connected");
         }
 
-        return this.client.query(query).then((res) => {
-            console.log(res);
-        });
+        await this.client.query(query);
     }
 
     close(): Promise<void> | void {

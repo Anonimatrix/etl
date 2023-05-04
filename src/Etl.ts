@@ -24,7 +24,7 @@ export class Etl<T extends object> {
             //Add the query to the string and add a comma
             query += await Query.fromObject(item, this.options.table, index) + ',';
             
-            if(this.options.chunkItems && index % this.options.chunkItems === 0) {
+            if(this.options.chunkItems && index % this.options.chunkItems === 0 && index !== 0) {
                 await this.insert(query.slice(0, -1));
                 query = "";
             }
@@ -60,11 +60,12 @@ export class Etl<T extends object> {
 
         const newObj: T = { ...obj };
 
-        formatters.forEach((format) => {
-            Object.entries(newObj as object).forEach(([key, value]) => {
-                format(newObj, key, value);
-            });
-        });
+        for (let formater of formatters) {
+            for(let entry of Object.entries(newObj)) {
+                const [key, value] = entry;
+                await formater(newObj, key, value);
+            }
+        }
 
         return newObj;
     }
