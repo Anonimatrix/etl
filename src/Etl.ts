@@ -21,9 +21,13 @@ export class Etl<T extends object> {
             item = await this.transform(item);
             item = await this.remove(item);
 
-            query += await Query.fromObject(item, this.options.table, index);
+            //Add the query to the string and add a comma
+            query += await Query.fromObject(item, this.options.table, index) + ',';
             index++;
         }
+
+        //Remove the last comma
+        query = query.slice(0, -1);
 
         await this.insert(query);
 
