@@ -66,13 +66,13 @@ const memoizedIsColCollision = memoization(isColCollision, "collision");
  * @param cache  If the function should be cached
  * @returns  A function that checks if the key is a collision of the columns
  */
-export const collision: (cols: string[], accuracy?: number, minLength?: number, cache?: boolean) => Formater = (cols: string[], accuracy = 0.1, minLength = 3, cache = true) => (obj, key, value) => {
+export const collision: (cols: string[], accuracy?: number, minLength?: number, cache?: boolean) => Formater = (cols: string[], accuracy = 0.1, minLength = 3, cache = true) => async (obj, key, value) => {
     let collision = false;
     for(const col of cols) {
         const isColCollisionFun = cache ? memoizedIsColCollision : isColCollision;
         const minLengthCompare = minLength < key.length || col === key;
 
-        if(minLengthCompare && (isColCollisionFun(key, col, accuracy) || isColCollisionFun(col, key, accuracy))) {
+        if(minLengthCompare && (await isColCollisionFun(key, col, accuracy) || await isColCollisionFun(col, key, accuracy))) {
             delete obj[key];
             obj[col] = value;
             collision = true; 

@@ -7,7 +7,6 @@ type CallbackFunction = (...args: any[]) => any;
 export const memoization = (
   fn: CallbackFunction,
   name = "cache",
-  argsKey = [0]
 ) => {
   const cacheFilePath = path.join(__dirname, cacheDir, name + ".json");
   mkdirSync(parse(cacheFilePath).dir, { recursive: true });
@@ -21,7 +20,7 @@ export const memoization = (
   }
 
   const cachedFunction: CallbackFunction = async (...args) => {
-    const key = JSON.stringify(args.filter((_, i) => argsKey.includes(i)));
+    const key = JSON.stringify(args.join('-'));
     if (cache[key] != undefined) {
       return cache[key];
     }

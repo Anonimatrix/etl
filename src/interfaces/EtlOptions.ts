@@ -32,4 +32,4 @@ export type Transform<T extends object> = {
     [key in KeyOf<T>]?: (object: any, value: string, client: ClientAdapter) => string | number | null | Promise<string | number | null>;
 };
 
-export type Formater = (object: any, key: string, value: any) => void;
+export type Formater = (object: any, key: string, value: any) => void | Promise<void>;
