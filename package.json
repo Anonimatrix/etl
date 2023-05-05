@@ -1,6 +1,6 @@
 {
     "name": "@xkairo/etl",
-    "version": "1.5.1",
+    "version": "1.5.3",
     "description": "",
     "main": "dist/main.js",
     "typings": "dist/main.d.ts",
