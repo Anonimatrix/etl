@@ -21,6 +21,8 @@ export class ExcelAdapter<T extends object> implements FileAdapter<T> {
         if(this.actualSheetIndex !== undefined) {
             const sheet = file.Sheets[sheets[this.actualSheetIndex]];
             data.push(...this.readSheet(sheet));
+            
+            return data;
         }
 
         for(let i = 0; i < sheets.length && !this.actualSheetIndex; i++)
