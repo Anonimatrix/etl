@@ -1,9 +1,19 @@
 import { Query } from "./Query";
-import { EtlOptions, KeyOf } from "./interfaces/EtlOptions";
+import { EtlOptions, FileAdapter, KeyOf } from "./interfaces/EtlOptions";
 
 export class Etl<T extends object> {
     constructor(private readonly options: EtlOptions<T>) {
         this.options = options;
+    }
+
+    /**
+     *  Insert data into the database using the options provided from a file
+     * @param fileAdapter File adapter to read the file
+     */
+    public async fromFile(fileAdapter: FileAdapter<T>): Promise<void> {
+        const data = fileAdapter.toArrayOfObject();
+
+        await this.run(data);
     }
 
     /**
@@ -28,6 +38,7 @@ export class Etl<T extends object> {
                 await this.insert(query.slice(0, -1));
                 query = "";
             }
+            
             index++;
         }
 

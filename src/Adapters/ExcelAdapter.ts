@@ -3,6 +3,7 @@ import reader from 'xlsx';
 
 export class ExcelAdapter<T extends object> implements FileAdapter<T> {
     private filepath: string;
+    private actualSheetIndex?: number;
     
     constructor(filepath: string) {
         this.filepath = filepath;
@@ -17,15 +18,37 @@ export class ExcelAdapter<T extends object> implements FileAdapter<T> {
         const file = reader.readFile(this.filepath)
         const sheets = file.SheetNames;
 
-        for(let i = 0; i < sheets.length; i++)
+        if(this.actualSheetIndex !== undefined) {
+            const sheet = file.Sheets[sheets[this.actualSheetIndex]];
+            data.push(...this.readSheet(sheet));
+        }
+
+        for(let i = 0; i < sheets.length && !this.actualSheetIndex; i++)
         {
-            const temp = reader.utils.sheet_to_json(
-                    file.Sheets[file.SheetNames[i]])
-            temp.forEach((res) => {
-                data.push(res as T)
-            })
+            const sheet = file.Sheets[sheets[i]];
+            data.push(...this.readSheet(sheet));
         }
 
         return data;
+    }
+
+    readSheet(sheet:any) {
+        const data: T[] = [];
+
+        const temp = reader.utils.sheet_to_json(sheet)
+        temp.forEach((res: any) => {
+            data.push(res as T);
+        });
+
+        return data;
+    }
+
+    getSheetNames(): string[] {
+        const file = reader.readFile(this.filepath)
+        return file.SheetNames;
+    }
+
+    setActualSheetIndex(index: number): void {
+        this.actualSheetIndex = index;
     }
 }

@@ -32,7 +32,7 @@ Este es el mas sencillo, unicamente un array con los elementos del objeto que de
 ### Formaters
 
 Este se ejecuta sobre todos las columnas y da la posibilidad de modificar las keys y valores de manera masiva. El proyecto ya trae
-3 de ellos, pero no limita al que este usando la libreria a crear sus propios.
+3 de ellos, pero no limita al que este usando la libreria a crear sus propios. Estos pueden mutar el objeto que reciben.
 
 Un ejemplo de uno personalizado:
 
@@ -45,7 +45,7 @@ const clear: Formater = (obj, key, value) => {
 
 ### Transform
 
-Este consiste en poder modificar una unica columna/propiedad del objeto de manera personalizada
+Este consiste en poder modificar una unica columna/propiedad del objeto de manera personalizada. Estos no pueden mutar el objeto, por lo que se debera hacer es retornar el valor
 
 ```typescript
     const transform = {
