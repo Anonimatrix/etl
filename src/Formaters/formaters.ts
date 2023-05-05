@@ -1,5 +1,6 @@
 import { Formater } from "../interfaces/EtlOptions";
 import {Diff} from "diff";
+import { memoization } from "../utils/memoization";
 
 /**
  *  Change the names of the keys of the object
@@ -55,19 +56,23 @@ const isColCollision = (col: string, otherCol: string, accuracy: number) => {
     return (differenceNotHasManyChars && differenceNotHasOtherWord)
 }
 
+const memoizedIsColCollision = memoization(isColCollision, "collision");
+
 /**
  *  Check if the key is a collision of the columns. Only conserves the columns with collision
  * @param cols  The columns to be checked
  * @param accuracy  The accuracy of the check
  * @param minLength  The minimum length of the key to be checked with accuracy. If the key is less than minLength, the key should be equal to the column
+ * @param cache  If the function should be cached
  * @returns  A function that checks if the key is a collision of the columns
  */
-export const collision: (cols: string[], accuracy?: number, minLength?: number) => Formater = (cols: string[], accuracy = 0.1, minLength = 3) => (obj, key, value) => {
+export const collision: (cols: string[], accuracy?: number, minLength?: number, cache?: boolean) => Formater = (cols: string[], accuracy = 0.1, minLength = 3, cache = true) => (obj, key, value) => {
     let collision = false;
     for(const col of cols) {
+        const isColCollisionFun = cache ? memoizedIsColCollision : isColCollision;
         const minLengthCompare = minLength < key.length || col === key;
 
-        if(minLengthCompare && (isColCollision(key, col, accuracy) || isColCollision(col, key, accuracy))) {
+        if(minLengthCompare && (isColCollisionFun(key, col, accuracy) || isColCollisionFun(col, key, accuracy))) {
             delete obj[key];
             obj[col] = value;
             collision = true; 
@@ -77,3 +82,21 @@ export const collision: (cols: string[], accuracy?: number, minLength?: number) 
 
     if(!collision) delete obj[key];
 }
+
+/**
+ *  Order the keys of the object
+ * @param unordered  The object to be ordered
+ * @param key  The key of the object to be ordered
+ * @returns 
+ */
+export const orderByKeys: Formater = (unordered, key) => {
+    const keys = Object.keys(unordered);
+  
+    if (keys[0] != key) return;
+  
+    keys.sort().forEach((value) => {
+      const auxVal = unordered[value];
+      delete unordered[value];
+      unordered[value] = auxVal;
+    });
+  };

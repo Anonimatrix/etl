@@ -1,7 +1,7 @@
 import { ExcelAdapter } from "./Adapters/ExcelAdapter";
 import { PostgresAdapter } from "./Adapters/PostgresAdapter";
 import { Etl } from "./Etl";
-import { clear, collision, changeNames } from "./Formaters/formaters";
+import { clear, collision, changeNames, orderByKeys } from "./Formaters/formaters";
 import {
     EtlOptions,
     Formater,
@@ -20,7 +20,8 @@ const Adapters = {
 const Formaters = {
     clear,
     collision,
-    changeNames
+    changeNames,
+    orderByKeys
 }
 
 export {

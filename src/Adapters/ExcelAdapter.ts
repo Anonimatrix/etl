@@ -35,7 +35,7 @@ export class ExcelAdapter<T extends object> implements FileAdapter<T> {
     readSheet(sheet:any) {
         const data: T[] = [];
 
-        const temp = reader.utils.sheet_to_json(sheet)
+        const temp = reader.utils.sheet_to_json(sheet, { defval: "" })
         temp.forEach((res: any) => {
             data.push(res as T);
         });
