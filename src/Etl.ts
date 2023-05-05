@@ -26,26 +26,28 @@ export class Etl<T extends object> {
         let query: string = "";
         let index = 0;
 
-        for (let item of data) {
+        for (let i in data) {
+            const chunkFinal = Boolean(this.options.chunkItems && index == this.options.chunkItems - 1);
+            let last = Number(i) == data.length - 1 || chunkFinal;
+            let item = data[i];
+
             item = await this.format(item);
             item = await this.transform(item);
             item = await this.remove(item);
 
             //Add the query to the string and add a comma
-            query += await Query.fromObject(item, this.options.table, index) + ',';
-            
-            if(this.options.chunkItems && index % this.options.chunkItems === 0 && index !== 0) {
-                await this.insert(query.slice(0, -1));
-                query = "";
-            }
-            
+            query += await Query.fromObject(item, this.options.table, index, last);
+
             index++;
+
+            if(chunkFinal) {
+                await this.insert(query);
+                query = "";
+                index = 0;
+            }
         }
 
         if(query.length > 0) {
-            //Remove the last comma
-            query = query.slice(0, -1);
-
             await this.insert(query);
         }
 

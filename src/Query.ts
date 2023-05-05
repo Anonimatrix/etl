@@ -1,5 +1,5 @@
 export class Query {
-    public static async fromObject(obj: object, table: string, line = 0) {
+    public static async fromObject(obj: object, table: string, line = 0, last = false) {
         const keys = Object.keys(obj).map((key) => `"${key}"`);
         const values = Object.values(obj);
 
@@ -16,7 +16,7 @@ export class Query {
                 if (typeof value == "number") return value;
                 return `'${value}'`;
             })
-            .join(", ")})`;
+            .join(", ")})${last ? ";" : ",\n"}`;
 
         return query;
     }
