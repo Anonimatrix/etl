@@ -11,11 +11,7 @@ export const changeNames: <T extends object>(name: { [key: string]: keyof T }) =
     if (names[key]) {
         delete obj[key];
         obj[names[key]] = value;
-    } else {
-        obj[key] = value;
     }
-
-    return obj;
 };
 
 /**

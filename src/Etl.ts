@@ -107,8 +107,6 @@ export class Etl<T extends object> {
         for(let key in transform) {
             const value: any = obj[key as keyof T];
 
-            if (value == null) delete newObj[key as keyof T];
-
             let newValue: string | number | null = null;
 
             try {
