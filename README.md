@@ -67,12 +67,14 @@ new Etl<Alumnos>({
       Formaters.changeNames<Alumnos>({wrong_name_col: "name"}), // Cambia el nombre de las claves en la data a el nombre de la columna en la base de datos
       Formaters.clear, // Trim claves y valores
       Formaters.collision([namesOfColsOfTableInDB], 0.85), // Solo conserva las propiedades del objeto que colisionan con el array pasado (la idea que sea las columnas que desea insertar en su tabla)
+      Formaters.orderByKeys // CASI SIEMPRE NECESARIO. Va a ordenar las propiedades del objeto alfabeticamente. Esto puede ahorrar problemas al ejecutar la query para insertar. Debido a que los objetos no van a tener distinto orden
     ],
     transform: {
       name: (obj, value) => {
         return value.toLowerCase();  // Cambio del nombre a minusculas
       }
     },
-    remove: ['id'] // Remueve la propiedad id
+    remove: ['id'], // Remueve la propiedad id
+    chunkItems: 100 // Convierte las queries en chunks del tamaño solicitado
   }).run(data);
 ```
