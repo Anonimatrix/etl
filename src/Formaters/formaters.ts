@@ -85,14 +85,19 @@ export const collision: (cols: string[], accuracy?: number, minLength?: number, 
  * @param key  The key of the object to be ordered
  * @returns 
  */
-export const orderByKeys: Formater = (unordered, key) => {
-    const keys = Object.keys(unordered);
-  
-    if (keys[0] != key) return;
-  
-    keys.sort().forEach((value) => {
-      const auxVal = unordered[value];
-      delete unordered[value];
-      unordered[value] = auxVal;
-    });
-  };
+export const orderByKeys: () => Formater = () => {
+    let lastObjExecuted: object | null = null;
+    return  (unordered, key) => {
+        if(lastObjExecuted === unordered) return;
+        
+        const keys = Object.keys(unordered);
+    
+        keys.sort().forEach((value) => {
+            const auxVal = unordered[value];
+            delete unordered[value];
+            unordered[value] = auxVal;
+        });
+
+        lastObjExecuted = unordered;
+    } 
+};

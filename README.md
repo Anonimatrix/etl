@@ -37,9 +37,32 @@ Este se ejecuta sobre todos las columnas y da la posibilidad de modificar las ke
 Un ejemplo de uno personalizado:
 
 ```typescript
-const clear: Formater = (obj, key, value) => {
-    delete obj[key];
-    obj[key.trim()] = value.trim();
+  const clear: Formater = (obj, key, value) => {
+      delete obj[key];
+      obj[key.trim()] = value.trim();
+  };
+```
+
+#### Unica ejecucion
+
+Si necesitara de alguna manera que un formatter se ejecutara una unica vez por objeto, y no en cada propiedad del objeto podria hacer la siguiente implementacion, que pertenece al formatter orderByKeys. Como puede observar lo encapsulamos en una Closure que va a guardar el ultimo objeto ejecutado y se va a encargar de que este solo se ejecute una vez
+
+```typescript
+  const orderByKeys: () => Formater = () => {
+    let lastObjExecuted: object | null = null;
+    return  (unordered, key) => {
+        if(lastObjExecuted === unordered) return;
+        
+        const keys = Object.keys(unordered);
+    
+        keys.sort().forEach((value) => {
+            const auxVal = unordered[value];
+            delete unordered[value];
+            unordered[value] = auxVal;
+        });
+
+        lastObjExecuted = unordered;
+    } 
 };
 ```
 
@@ -67,7 +90,7 @@ new Etl<Alumnos>({
       Formaters.changeNames<Alumnos>({wrong_name_col: "name"}), // Cambia el nombre de las claves en la data a el nombre de la columna en la base de datos
       Formaters.clear, // Trim claves y valores
       Formaters.collision([namesOfColsOfTableInDB], 0.85), // Solo conserva las propiedades del objeto que colisionan con el array pasado (la idea que sea las columnas que desea insertar en su tabla)
-      Formaters.orderByKeys // CASI SIEMPRE NECESARIO. Va a ordenar las propiedades del objeto alfabeticamente. Esto puede ahorrar problemas al ejecutar la query para insertar. Debido a que los objetos no van a tener distinto orden
+      Formaters.orderByKeys() // CASI SIEMPRE NECESARIO. Va a ordenar las propiedades del objeto alfabeticamente. Esto puede ahorrar problemas al ejecutar la query para insertar. Debido a que los objetos no van a tener distinto orden. Unicamente se va a ejecutar una sola vez por objeto
     ],
     transform: {
       name: (obj, value) => {
